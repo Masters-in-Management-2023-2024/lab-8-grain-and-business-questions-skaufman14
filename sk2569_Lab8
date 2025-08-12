@@ -1,0 +1,428 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "9_jTIvXzhU61",
+        "outputId": "f35a2683-518d-4364-b7e6-1ffb5ec3da99"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Loading diamonds dataset...\n",
+            "Dataset loaded successfully!\n"
+          ]
+        }
+      ],
+      "source": [
+        "import polars as pl\n",
+        "\n",
+        "# Load the diamonds dataset\n",
+        "print(\"Loading diamonds dataset...\")\n",
+        "df = pl.read_csv('https://raw.githubusercontent.com/pycaret/pycaret/master/datasets/diamond.csv')\n",
+        "print(\"Dataset loaded successfully!\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Question 1\n",
+        "#The CEO walks in: \"Before we dive into specifics, I need to understand what we're working with. Give me the basics about our inventory database.\"\n",
+        "\n",
+        "inventory_size = df.shape[0]\n",
+        "print(f\"Our inventory contains {inventory_size} diamonds.\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "qfNppYHFhZRX",
+        "outputId": "08ea7283-7085-474b-ad39-28079562fb52"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Q1: Our inventory contains 6000 diamonds.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q2\n",
+        "#\"What information do we track about each diamond?\" List all the characteristics we record.\n",
+        "\n",
+        "columns_list = df.columns\n",
+        "print(f\"We track the following characteristics: {columns_list}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "nRbfYPfRihGk",
+        "outputId": "d5405ef8-db2d-4dca-c236-59f83302dbb9"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "We track the following characteristics: ['Carat Weight', 'Cut', 'Color', 'Clarity', 'Polish', 'Symmetry', 'Report', 'Price']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q3\n",
+        "\n",
+        "print(\"Each row represents one individual diamond with its physical attributes, quality grades, and price.\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-1vCw5xtiz0V",
+        "outputId": "6b3e0e93-f98c-4368-b0a2-f73f11ab35c0"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Each row represents one individual diamond with its physical attributes, quality grades, and price.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q4\n",
+        "\n",
+        "#total_carats = df.select([\"Carat Weight\"]).height\n",
+        "#print(f\"Total carats in inventory: {total_carats}\")\n",
+        "\n",
+        "total_carats = df[\"Carat Weight\"].sum()\n",
+        "print(f\"Total carats in inventory: {total_carats}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "cKiwC59Ti66s",
+        "outputId": "ee4653fc-a42d-4bfb-e9e7-ba9db25c2dcf"
+      },
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Total carats in inventory: 8007.120000000001\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q5\n",
+        "unique_cuts = df[\"Cut\"].n_unique()\n",
+        "print(f\"We have {unique_cuts} unique cuts.\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "boPa1a7djtSP",
+        "outputId": "1341f428-dacc-4421-d934-875ce642a320"
+      },
+      "execution_count": 14,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "We have 5 unique cuts.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q6\n",
+        "\n",
+        "max_price = df[\"Price\"].max()\n",
+        "min_price = df[\"Price\"].min()\n",
+        "print(f\"Most valuable diamond price: ${max_price}, Least valuable: ${min_price}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "WtB6NKCfjw7v",
+        "outputId": "150d14a6-0ad6-4a40-f9ba-399fd801e92d"
+      },
+      "execution_count": 15,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Most valuable diamond price: $101561, Least valuable: $2184\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q7\n",
+        "\n",
+        "avg_price_by_color = df.group_by(\"Color\").agg(\n",
+        "    pl.col(\"Price\").mean().alias(\"avg_price\")\n",
+        ").sort(\"Color\")\n",
+        "print(\"Q7: Average price by color:\")\n",
+        "print(avg_price_by_color)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5zWtBVafkLQ1",
+        "outputId": "df66fe09-dfba-433b-f094-b492a933dcb9"
+      },
+      "execution_count": 17,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Q7: Average price by color:\n",
+            "shape: (6, 2)\n",
+            "┌───────┬──────────────┐\n",
+            "│ Color ┆ avg_price    │\n",
+            "│ ---   ┆ ---          │\n",
+            "│ str   ┆ f64          │\n",
+            "╞═══════╪══════════════╡\n",
+            "│ D     ┆ 15255.783661 │\n",
+            "│ E     ┆ 11539.190231 │\n",
+            "│ F     ┆ 12712.241856 │\n",
+            "│ G     ┆ 12520.050633 │\n",
+            "│ H     ┆ 10487.347544 │\n",
+            "│ I     ┆ 8989.636364  │\n",
+            "└───────┴──────────────┘\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "ASSPLj-_kTCK"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q8\n",
+        "\n",
+        "print(\"Reflection: New grain = Each row now represents the average price for all diamonds of a given color.\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "pqVAoOdxkTJy",
+        "outputId": "7fdafd2d-61bc-4761-b920-65cef715e2df"
+      },
+      "execution_count": 19,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Reflection: New grain = Each row now represents the average price for all diamonds of a given color.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q8\n",
+        "\n",
+        "clarity_breakdown = df.group_by(\"Clarity\").agg([\n",
+        "    pl.count().alias(\"diamond_count\"),\n",
+        "    pl.col(\"Price\").mean().alias(\"avg_price\"),\n",
+        "    pl.col(\"Carat Weight\").sum().alias(\"total_carats\")\n",
+        "]).sort(\"Clarity\")\n",
+        "print(\"Q8: Clarity breakdown:\")\n",
+        "print(clarity_breakdown)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "oSBwdo78kXmn",
+        "outputId": "c5cf00af-52a0-4413-909f-d55c74ae789c"
+      },
+      "execution_count": 22,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Q8: Clarity breakdown:\n",
+            "shape: (7, 4)\n",
+            "┌─────────┬───────────────┬──────────────┬──────────────┐\n",
+            "│ Clarity ┆ diamond_count ┆ avg_price    ┆ total_carats │\n",
+            "│ ---     ┆ ---           ┆ ---          ┆ ---          │\n",
+            "│ str     ┆ u32           ┆ f64          ┆ f64          │\n",
+            "╞═════════╪═══════════════╪══════════════╪══════════════╡\n",
+            "│ FL      ┆ 4             ┆ 63776.0      ┆ 7.87         │\n",
+            "│ IF      ┆ 219           ┆ 22105.844749 ┆ 316.0        │\n",
+            "│ SI1     ┆ 2059          ┆ 8018.864012  ┆ 2563.69      │\n",
+            "│ VS1     ┆ 1192          ┆ 13694.113255 ┆ 1682.74      │\n",
+            "│ VS2     ┆ 1575          ┆ 11809.053333 ┆ 2170.81      │\n",
+            "│ VVS1    ┆ 285           ┆ 16845.680702 ┆ 389.43       │\n",
+            "│ VVS2    ┆ 666           ┆ 14142.177177 ┆ 876.58       │\n",
+            "└─────────┴───────────────┴──────────────┴──────────────┘\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "/tmp/ipython-input-1301285425.py:4: DeprecationWarning: `pl.count()` is deprecated. Please use `pl.len()` instead.\n",
+            "  pl.count().alias(\"diamond_count\"),\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q9\n",
+        "\n",
+        "cut_color_pricing = df.group_by([\"Cut\", \"Color\"]).agg(\n",
+        "    pl.col(\"Price\").mean().alias(\"avg_price\")\n",
+        ").sort([\"Cut\", \"Color\"])\n",
+        "print(\"Q9: Pricing by cut and color:\")\n",
+        "print(cut_color_pricing)\n",
+        "\n",
+        "print(\"Reflection: New grain = Each row represents the average price for diamonds with a specific cut-color combination.\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "a6Vy_iE-kiQ-",
+        "outputId": "1200c7cb-7e77-4c60-9a26-22343ed6cbf0"
+      },
+      "execution_count": 30,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Q9: Pricing by cut and color:\n",
+            "shape: (30, 3)\n",
+            "┌───────────┬───────┬──────────────┐\n",
+            "│ Cut       ┆ Color ┆ avg_price    │\n",
+            "│ ---       ┆ ---   ┆ ---          │\n",
+            "│ str       ┆ str   ┆ f64          │\n",
+            "╞═══════════╪═══════╪══════════════╡\n",
+            "│ Fair      ┆ D     ┆ 6058.25      │\n",
+            "│ Fair      ┆ E     ┆ 5370.625     │\n",
+            "│ Fair      ┆ F     ┆ 6063.625     │\n",
+            "│ Fair      ┆ G     ┆ 7345.52381   │\n",
+            "│ Fair      ┆ H     ┆ 5908.5       │\n",
+            "│ …         ┆ …     ┆ …            │\n",
+            "│ Very Good ┆ E     ┆ 12101.910217 │\n",
+            "│ Very Good ┆ F     ┆ 12413.905495 │\n",
+            "│ Very Good ┆ G     ┆ 12354.013841 │\n",
+            "│ Very Good ┆ H     ┆ 10056.106132 │\n",
+            "│ Very Good ┆ I     ┆ 8930.031332  │\n",
+            "└───────────┴───────┴──────────────┘\n",
+            "Reflection: New grain = Each row represents the average price for diamonds with a specific cut-color combination.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Q10\n",
+        "\n",
+        "top_5_value_segments = df.group_by([\"Color\", \"Cut\"]).agg([\n",
+        "    pl.sum(\"Price\").alias(\"total_value\"),\n",
+        "    pl.len().alias(\"diamond_count\")\n",
+        "]).sort(\"total_value\", descending=True).head(5)\n",
+        "print(\"Top 5 most valuable color-cut combinations:\")\n",
+        "print(top_5_value_segments)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "wC9qKXrnk2EE",
+        "outputId": "be7e401d-b666-4b47-8907-5d57e190e6be"
+      },
+      "execution_count": 39,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Top 5 most valuable color-cut combinations:\n",
+            "shape: (5, 4)\n",
+            "┌───────┬───────────┬─────────────┬───────────────┐\n",
+            "│ Color ┆ Cut       ┆ total_value ┆ diamond_count │\n",
+            "│ ---   ┆ ---       ┆ ---         ┆ ---           │\n",
+            "│ str   ┆ str       ┆ i64         ┆ u32           │\n",
+            "╞═══════╪═══════════╪═════════════╪═══════════════╡\n",
+            "│ G     ┆ Ideal     ┆ 9363514     ┆ 690           │\n",
+            "│ G     ┆ Very Good ┆ 7140620     ┆ 578           │\n",
+            "│ F     ┆ Very Good ┆ 5648327     ┆ 455           │\n",
+            "│ F     ┆ Ideal     ┆ 5346782     ┆ 363           │\n",
+            "│ H     ┆ Ideal     ┆ 5279687     ┆ 458           │\n",
+            "└───────┴───────────┴─────────────┴───────────────┘\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
